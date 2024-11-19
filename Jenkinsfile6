@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+    stages {
+        stage('Start Docker Containers') {
+            steps {
+                script {
+                    // Start the containers in detached mode
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+
+        stage('Run Tests or Tasks') {
+            steps {
+                script {
+                    // Run tests or tasks while containers are up
+                    echo "Running tests or other tasks while containers are up."
+                }
+            }
+        }
+
+        stage('Wait for User Input') {
+            steps {
+                input message: 'Do you want to stop the Docker containers?', ok: 'Yes, Stop Containers'
+            }
+        }
+
+        stage('Decide Action') {
+            steps {
+                script {
+                    // The pipeline will resume after user input
+                    echo 'User has decided to stop the containers.'
+                    sh 'docker-compose down'
+                }
+            }
+        }
+    }
+}
