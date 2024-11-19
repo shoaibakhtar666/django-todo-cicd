@@ -1,0 +1,10 @@
+pipeline {
+  agent any
+  stages {
+    stage('Compose') {
+      steps {
+        sh 'docker compose up -d'
+      }
+    }
+  }
+}
