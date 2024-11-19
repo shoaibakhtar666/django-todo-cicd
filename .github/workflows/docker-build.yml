@@ -1,0 +1,28 @@
+name: Run on Commit
+
+# Trigger the workflow on push events (commit to the repository)
+on:
+  push:
+    branches:
+      - develop  # Specify which branch you want to listen to for commits
+    # If you want to trigger on commits to all branches, use:
+    # branches: ["*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # You can change this to macOS or Windows as well
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # This action checks out your repository code
+
+    - name: Set up Docker
+      uses: docker/setup-buildx-action@v2  # Set up Docker Buildx (for advanced builds)
+    
+    - name: Build Docker image
+      run: |
+        docker build -t my-image .
+    
+    - name: Run Docker container
+      run: |
+        docker run -d -p 8000:8000 my-image
