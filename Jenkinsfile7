@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    parameters {
+        choice(name: 'ACTION', choices: ['Stop Containers', 'Leave Running'], description: 'What would you like to do with the containers?')
+    }
+    stages {
+        stage('Start Docker Containers') {
+            steps {
+                script {
+                    // Start the containers in detached mode
+                    sh 'docker-compose up -d'
+                }
+            }
+        }
+
+        stage('Run Tests or Tasks') {
+            steps {
+                script {
+                    // Run tests or tasks while containers are up
+                    echo "Running tests or other tasks while containers are up."
+                }
+            }
+        }
+
+        stage('Decide Action') {
+            steps {
+                script {
+                    // Based on the user input, decide whether to stop the containers
+                    if (params.ACTION == 'Stop Containers') {
+                        echo 'Stopping Docker containers based on user input.'
+                        sh 'docker-compose down'
+                    } else {
+                        echo 'Leaving Docker containers running.'
+                    }
+                }
+            }
+        }
+    }
+}
